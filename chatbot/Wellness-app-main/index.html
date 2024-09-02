@@ -1,112 +1,164 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Chatbot</title>
+    <title>Customer Care Chatbot</title>
     <style>
-      body {
-        font-family: sans-serif;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        min-height: 100vh;
-        background-color: #2a2f38;
-        color: #c6d0d9;
-      }
+    body {
+  font-family: 'Arial', sans-serif;
+  background: #f4f7f9;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
 
-      #chat-container {
-        background-color: #23272e;
-        border-radius: 10px;
-        padding: 20px;
-        box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.7);
-        width: 400px;
-      }
+.chat-container {
+  background: #ffffff;
+  width: 400px;
+  border-radius: 10px;
+  box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
 
-      h1 {
-        text-align: center;
-        margin-bottom: 20px;
-        color: #c6d0d9;
-      }
+.chat-header {
+  background: linear-gradient(135deg, #6a89cc, #b8e994);
+  padding: 15px;
+  text-align: center;
+  color: #ffffff;
+  font-size: 1.5rem;
+  font-weight: bold;
+  border-bottom: 2px solid #ced6e0;
+}
 
-      #chat-history {
-        height: 300px;
-        overflow-y: scroll;
-        border: 1px solid #394252;
-        border-radius: 5px;
-        padding: 10px;
-      }
+.chat-history {
+  flex-grow: 1;
+  padding: 15px;
+  background: #f4f7f9;
+  overflow-y: auto;
+  border-bottom: 2px solid #ced6e0;
+}
 
-      .user-message {
-        text-align: right;
-        padding: 10px;
-        background-color: #394252;
-        border-radius: 10px;
-        margin-bottom: 5px;
-        color: #c6d0d9;
-      }
+.chat-messages {
+  display: flex;
+  flex-direction: column;
+}
 
-      .bot-message {
-        text-align: left;
-        padding: 10px;
-        background-color: #2c333d;
-        border-radius: 10px;
-        margin-bottom: 5px;
-        color: #c6d0d9;
-      }
+.chat-message {
+  margin-bottom: 15px;
+  display: flex;
+  flex-direction: column;
+}
 
-      form {
-        display: flex;
-      }
+.user-message {
+  background: #6a89cc;
+  color: #ffffff;
+  padding: 10px 15px;
+  border-radius: 20px;
+  align-self: flex-end;
+  max-width: 75%;
+  word-wrap: break-word;
+}
 
-      input {
-        flex-grow: 1;
-        margin-right: 10px;
-        padding: 10px;
-        border: 1px solid #394252;
-        border-radius: 5px;
-        background-color: #2c333d;
-        color: #c6d0d9;
-      }
+.bot-message {
+  background: #b8e994;
+  color: #333333;
+  padding: 10px 15px;
+  border-radius: 20px;
+  align-self: flex-start;
+  max-width: 75%;
+  word-wrap: break-word;
+}
 
-      button {
-        background-color: #0078d7;
-        color: white;
-        border: none;
-        padding: 10px 15px;
-        border-radius: 5px;
-        cursor: pointer;
-      }
+.chat-form {
+  display: flex;
+  border-top: 2px solid #ced6e0;
+  padding: 10px 15px;
+  background: #ffffff;
+}
 
-      #loader {
-        display: none;
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        color: #c6d0d9;
-      }
+#user-input {
+  flex-grow: 1;
+  padding: 10px;
+  border: 1px solid #ced6e0;
+  border-radius: 25px;
+  font-size: 1rem;
+  outline: none;
+}
+
+#user-input:focus {
+  border-color: #6a89cc;
+}
+
+button[type="submit"] {
+  background: #6a89cc;
+  color: #ffffff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 25px;
+  margin-left: 10px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+button[type="submit"]:hover {
+  background: #4a69bd;
+}
+
+.loader {
+  display: none;
+  text-align: center;
+  margin-top: 15px;
+}
+
+.loader img {
+  width: 50px;
+}
+
+.error-message {
+  color: #e74c3c;
+  text-align: center;
+  padding: 10px;
+  margin-top: 10px;
+  background: #f9ebea;
+  border: 1px solid #e74c3c;
+  border-radius: 5px;
+}
+
     </style>
   </head>
   <body>
-    <div id="chat-container">
-      <h1>Wellness Ally</h1>
-      <div id="chat-history"></div>
-      <form id="chat-form">
+    <div class="chat-container">
+      <header class="chat-header">
+        <h1>Customer Care</h1>
+      </header>
+      <div class="chat-history">
+        <div class="chat-messages">
+          <!-- Chat messages will be displayed here -->
+        </div>
+      </div>
+      <form class="chat-form">
         <input type="text" id="user-input" placeholder="Enter your message" />
         <button type="submit">Send</button>
       </form>
     </div>
-    <div id="loader">
+    <div class="loader">
       <img src="loader.gif" width="150px" alt="Loading..." />
     </div>
     <script>
-      const chatHistory = document.getElementById("chat-history");
-      const userInput = document.getElementById("user-input");
-      const form = document.getElementById("chat-form");
+      const chatHistory = document.querySelector(".chat-history");
+      const chatMessages = document.querySelector(".chat-messages");
+      const userInput = document.querySelector("#user-input");
+      const chatForm = document.querySelector(".chat-form");
+      const loader = document.querySelector(".loader");
 
       async function sendMessage() {
         const userMessage = userInput.value;
         userInput.value = ""; // Clear input field
-        console.log(userMessage);
         try {
           const response = await fetch("/chat", {
             method: "POST",
@@ -117,29 +169,35 @@
           });
 
           const data = await response.json();
-          console.log(data);
           const botMessage = data.response;
-          console.log(botMessage);
-          // Add chat message to the chat history
-          chatHistory.innerHTML += `<div class="user-message">${userMessage}</div>`;
-          chatHistory.innerHTML += `<div class="bot-message">${botMessage}</div>`;
-
-          // Scroll to the bottom of the chat history
+          const chatMessage = document.createElement("div");
+          chatMessage.classList.add("chat-message");
+          chatMessage.innerHTML = `
+            <div class="user-message">${userMessage}</div>
+            <div class="bot-message">${botMessage}</div>
+          `;
+          chatMessages.appendChild(chatMessage);
           chatHistory.scrollTop = chatHistory.scrollHeight;
         } catch (error) {
           console.error("Error:", error);
-          // Handle errors gracefully, e.g., display an error message to the user
+          displayErrorMessage("Error sending message. Please try again.");
+        } finally {
+          loader.style.display = "none"; // Hide the loader
         }
       }
 
-      form.addEventListener("submit", (event) => {
+      chatForm.addEventListener("submit", (event) => {
         event.preventDefault(); // Prevent form submission
-        const loader = document.getElementById("loader");
         loader.style.display = "block"; // Show the loader
-        sendMessage().finally(() => {
-          loader.style.display = "none"; // Hide the loader after the message is sent
-        });
+        sendMessage();
       });
+
+      function displayErrorMessage(message) {
+        const errorMessage = document.createElement("div");
+        errorMessage.textContent = message;
+        errorMessage.classList.add("error-message");
+        chatMessages.appendChild(errorMessage);
+      }
     </script>
   </body>
 </html>
