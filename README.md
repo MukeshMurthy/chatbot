@@ -1,4 +1,4 @@
-# coding-money-chatbot
+# Vandhanam organic Chat bot
 ## Installation
 1. npm install
 2. create .env file and add your API key as:
